@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | My Portfolio</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Flowing gradient background */
+    body.about-bg {
+      font-family: Arial, sans-serif;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      overflow-x: hidden;
+
+      background: linear-gradient(-45deg, #1e3c72, #2a5298, #0f9b0f, #ff4500);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      padding: 10px 20px;
+      background: rgba(0,0,0,0.5);
+      margin: 0;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    nav ul li {
+      margin-right: 20px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    section {
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: auto;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    p {
+      max-width: 700px;
+      margin: 0 auto 30px auto;
+      line-height: 1.6;
+    }
+
+    /* Profile picture */
+    .profile-pic-container {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid rgba(255,255,255,0.3);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+
+    .profile-pic:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+
+    /* Accordion container */
+    .accordion {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      text-align: left;
+    }
+
+    .accordion-item {
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .accordion-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+
+    .accordion-header {
+      padding: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      background: rgba(255,255,255,0.2);
+      transition: background 0.3s ease;
+    }
+
+    .accordion-item:hover .accordion-header {
+      background: rgba(255,255,255,0.35);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 20px;
+      transition: max-height 0.4s ease, padding 0.4s ease;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .accordion-item.active .accordion-content {
+      max-height: 500px;
+      padding: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .accordion-header {
+        font-size: 16px;
+        padding: 15px;
+      }
+
+      .accordion-content {
+        font-size: 14px;
+      }
+
+      .profile-pic {
+        width: 120px;
+        height: 120px;
+      }
+    }
+  </style>
+</head>
+<body class="about-bg">
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section>
+    <h1>About Me</h1>
+    <p>I'm Robert Ndegwa, a passionate developer creating modern, beautiful websites and apps. My goal is to craft clean, professional experiences that impress users. I'm also a student from Meru University of Science and Technology.</p>
+
+    <!-- Profile Picture clickable -->
+    <div class="profile-pic-container">
+      <a href="myphoto.jpg" target="_blank">
+        <img src="myphoto.jpg" alt="Robert Ndegwa" class="profile-pic">
+      </a>
+    </div>
+
+    <!-- Accordion -->
+    <div class="accordion">
+      <div class="accordion-item active">
+        <div class="accordion-header">Primary School Education</div>
+        <div class="accordion-content">
+          I attended my primary school at [Your Primary School Name] from [Year] to [Year]. This is where I built the foundation for my education.
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">Secondary School Education</div>
+        <div class="accordion-content">
+          I went to [Your Secondary School Name] from [Year] to [Year], where I developed a strong interest in technology and programming.
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">Tertiary Education</div>
+        <div class="accordion-content">
+          I am currently studying at Meru University of Science and Technology, pursuing [Your Course]. I focus on software development, web design, and modern technologies.
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">Other Achievements</div>
+        <div class="accordion-content">
+          I have participated in various coding competitions, workshops, and personal projects that enhanced my skills in programming and web development.
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="accordion-header">Future Goals</div>
+        <div class="accordion-content">
+          My goal is to become a full-stack developer, creating apps and websites that impact people's lives positively and professionally.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Accordion functionality
+    const items = document.querySelectorAll('.accordion-item');
+
+    items.forEach(item => {
+      const header = item.querySelector('.accordion-header');
+      header.addEventListener('click', () => {
+        items.forEach(i => {
+          if (i !== item) {
+            i.classList.remove('active');
+            i.querySelector('.accordion-content').style.maxHeight = null;
+          }
+        });
+
+        item.classList.toggle('active');
+        const content = item.querySelector('.accordion-content');
+        if(item.classList.contains('active')){
+          content.style.maxHeight = content.scrollHeight + "px";
+        } else {
+          content.style.maxHeight = null;
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact | My Portfolio</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Social links container */
+    .social-links {
+      display: flex;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    /* Each social link */
+    .social-links a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+      transition: transform 0.3s, color 0.3s;
+    }
+
+    /* Social icons */
+    .social-links img {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 5px;
+      transition: transform 0.3s;
+    }
+
+    /* Hover effect */
+    .social-links a:hover img {
+      transform: scale(1.2) rotate(10deg);
+    }
+
+    .social-links a:hover {
+      color: #00ffcc; /* Change text color on hover */
+      transform: translateY(-5px);
+    }
+
+    /* Optional: Add a subtle shadow on hover */
+    .social-links a:hover img {
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body class="contact-bg">
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section>
+    <h1>Contact Me</h1>
+    <p>Email: <a href="mailto:ndegwaroberts519@gmail.com">ndegwaroberts519@gmail.com</a></p>
+    <p>Phone: +254758947163</p>
+    <p>Or reach me via social media links below.</p>
+
+    <div class="social-links">
+      <!-- WhatsApp -->
+      <a href="https://wa.link/a01d51" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Logo">
+        WhatsApp
+      </a>
+
+      <!-- Facebook -->
+      <a href="https://www.facebook.com/robert.ndegwa.353" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo">
+        Facebook
+      </a>
+
+      <!-- GitHub -->
+      <a href="https://github.com/heavensassunder" target="_blank">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub Logo">
+        GitHub
+      </a>
+    </div>
+  </section>
+</body>
+</html>

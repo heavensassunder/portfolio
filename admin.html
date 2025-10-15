@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Manage Projects</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      color: #fff;
+      margin: 0;
+      padding: 40px 20px;
+      background: linear-gradient(-45deg, #1e3c72, #2a5298, #0f9b0f, #ff4500);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      min-height: 100vh;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    .project-list {
+      max-width: 700px;
+      margin: 20px auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .project-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 15px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 5px;
+    }
+
+    .delete-btn {
+      background: #ff4c4c;
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .delete-btn:hover { transform: scale(1.05); }
+
+    form {
+      max-width: 700px;
+      margin: 40px auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    input, textarea {
+      padding: 12px;
+      border-radius: 5px;
+      border: none;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 5px;
+      border: none;
+      background: #0f9b0f;
+      color: #fff;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+    }
+
+    label { font-weight: bold; }
+
+    .preview-container {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .preview-container img {
+      max-width: 100%;
+      max-height: 250px;
+      border-radius: 5px;
+      border: 2px solid rgba(255,255,255,0.3);
+    }
+
+    .back-btn {
+      display: block;
+      margin: 30px auto 0 auto;
+      text-align: center;
+      text-decoration: underline;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    @media (max-width: 600px) {
+      input, textarea { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Admin Panel - Manage Projects</h1>
+
+  <!-- Existing Projects -->
+  <h2>Existing Projects</h2>
+  <div class="project-list" id="projectList"></div>
+
+  <!-- Add New Project Form -->
+  <h2>Add New Project</h2>
+  <form id="projectForm">
+    <label for="projectName">Project Name:</label>
+    <input type="text" id="projectName" placeholder="Enter project name" required>
+
+    <label for="projectLink">GitHub Link:</label>
+    <input type="url" id="projectLink" placeholder="https://github.com/username/repo" required>
+
+    <label for="projectDesc">Project Description:</label>
+    <textarea id="projectDesc" placeholder="Enter project description" rows="4" required></textarea>
+
+    <label for="projectImg">Project Image (from your device):</label>
+    <input type="file" id="projectImg" accept="image/*" required>
+
+    <div class="preview-container">
+      <img id="previewImg" src="" alt="Image Preview" style="display:none;">
+    </div>
+
+    <button type="submit">Save Project</button>
+  </form>
+
+  <div class="back-btn" onclick="window.location.href='projects.html'">Back to Projects</div>
+
+  <script>
+    const projectList = document.getElementById('projectList');
+    const form = document.getElementById('projectForm');
+    const imgInput = document.getElementById('projectImg');
+    const preview = document.getElementById('previewImg');
+
+    let imgBase64 = '';
+
+    // Load projects from localStorage
+    function loadProjects() {
+      projectList.innerHTML = '';
+      const projects = JSON.parse(localStorage.getItem('projects')) || [];
+      projects.forEach((project, index) => {
+        const div = document.createElement('div');
+        div.className = 'project-item';
+        div.innerHTML = `
+          <span>${project.name}</span>
+          <button class="delete-btn" onclick="deleteProject(${index})">Delete</button>
+        `;
+        projectList.appendChild(div);
+      });
+    }
+
+    // Delete project
+    function deleteProject(index) {
+      let projects = JSON.parse(localStorage.getItem('projects')) || [];
+      if(confirm(`Are you sure you want to delete "${projects[index].name}"?`)) {
+        projects.splice(index, 1);
+        localStorage.setItem('projects', JSON.stringify(projects));
+        loadProjects();
+        alert('Project deleted!');
+      }
+    }
+
+    window.deleteProject = deleteProject;
+
+    // Image preview and base64 conversion
+    imgInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if(file){
+        const reader = new FileReader();
+        reader.onload = function(evt){
+          imgBase64 = evt.target.result;
+          preview.src = imgBase64;
+          preview.style.display = "block";
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Handle form submission
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('projectName').value.trim();
+      const link = document.getElementById('projectLink').value.trim();
+      const desc = document.getElementById('projectDesc').value.trim();
+
+      if(!name || !link || !desc || !imgBase64){
+        alert("All fields are required!");
+        return;
+      }
+
+      let projects = JSON.parse(localStorage.getItem('projects')) || [];
+      projects.push({name, link, desc, img: imgBase64});
+      localStorage.setItem('projects', JSON.stringify(projects));
+
+      alert("Project saved successfully!");
+      form.reset();
+      preview.style.display = "none";
+      imgBase64 = '';
+      loadProjects();
+    });
+
+    loadProjects();
+  </script>
+</body>
+</html>
