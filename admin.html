@@ -1,313 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin | Manage Projects</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      color: #fff;
-      margin: 0;
-      padding: 40px 20px;
-      background: linear-gradient(-45deg, #1e3c72, #2a5298, #0f9b0f, #ff4500);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-      min-height: 100vh;
-    }
-
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    h1, h2 { text-align: center; }
-
-    .project-list {
-      max-width: 700px;
-      margin: 20px auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .project-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 15px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 5px;
-    }
-
-    .delete-btn {
-      background: #ff4c4c;
-      border: none;
-      color: #fff;
-      font-weight: bold;
-      padding: 6px 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-
-    .delete-btn:hover { transform: scale(1.05); }
-
-    form {
-      max-width: 700px;
-      margin: 40px auto;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    input, textarea {
-      padding: 12px;
-      border-radius: 5px;
-      border: none;
-      font-size: 16px;
-    }
-
-    button {
-      padding: 12px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 5px;
-      border: none;
-      background: #0f9b0f;
-      color: #fff;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-    }
-
-    label { font-weight: bold; }
-
-    .preview-container {
-      text-align: center;
-      margin-top: 10px;
-    }
-
-    .preview-container img {
-      max-width: 100%;
-      max-height: 250px;
-      border-radius: 5px;
-      border: 2px solid rgba(255,255,255,0.3);
-    }
-
-    .back-btn {
-      display: block;
-      margin: 30px auto 0 auto;
-      text-align: center;
-      text-decoration: underline;
-      cursor: pointer;
-      color: #fff;
-    }
-
-    /* 🔄 Loader Spinner */
-    .loader {
-      display: none;
-      border: 6px solid rgba(255,255,255,0.3);
-      border-top: 6px solid #fff;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-      margin: 20px auto;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* ✅ Message Box */
-    .message {
-      text-align: center;
-      margin: 10px auto;
-      padding: 10px 15px;
-      border-radius: 5px;
-      max-width: 500px;
-      display: none;
-      font-weight: bold;
-    }
-
-    .success { background: rgba(0, 255, 0, 0.3); }
-    .error { background: rgba(255, 0, 0, 0.3); }
-
-    @media (max-width: 600px) {
-      input, textarea { font-size: 14px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin | Manage Projects</title>
+<style>
+  body { font-family: Arial; color:#fff; background: linear-gradient(-45deg,#1e3c72,#2a5298,#0f9b0f,#ff4500); background-size:400% 400%; animation: gradientBG 15s ease infinite; min-height:100vh; padding:20px;}
+  @keyframes gradientBG {0% { background-position:0% 50%; } 50% { background-position:100% 50%; } 100% { background-position:0% 50%; }}
+  h1 { text-align:center; }
+  form { max-width:600px; margin:auto; display:flex; flex-direction:column; gap:15px; }
+  input,textarea { padding:10px; border-radius:5px; border:none; font-size:16px; }
+  button { padding:10px; font-weight:bold; border:none; border-radius:5px; background:#0f9b0f; color:#fff; cursor:pointer; transition:transform 0.2s;}
+  button:hover { transform:scale(1.05);}
+  .preview { text-align:center; margin-top:10px; }
+  .preview img { max-width:100%; max-height:200px; border:2px solid rgba(255,255,255,0.3); border-radius:5px; }
+  .message { text-align:center; margin:10px auto; padding:10px; border-radius:5px; max-width:500px; display:none; font-weight:bold; }
+  .success { background: rgba(0,255,0,0.3);}
+  .error { background: rgba(255,0,0,0.3);}
+  .project-list { max-width:700px; margin:30px auto; display:flex; flex-direction:column; gap:10px; }
+  .project-item { display:flex; justify-content:space-between; align-items:center; padding:10px 15px; background: rgba(255,255,255,0.2); border-radius:5px; }
+  .delete-btn { background:#ff4c4c; border:none; color:#fff; font-weight:bold; padding:6px 12px; border-radius:5px; cursor:pointer; }
+</style>
 </head>
 <body>
-  <h1>Admin Panel - Manage Projects</h1>
 
-  <div class="loader" id="loader"></div>
-  <div class="message" id="messageBox"></div>
+<h1>Admin Panel - Manage Projects</h1>
 
-  <h2>Existing Projects</h2>
-  <div class="project-list" id="projectList"></div>
+<div class="message" id="messageBox"></div>
 
-  <h2>Add New Project</h2>
-  <form id="projectForm">
-    <label for="projectName">Project Name:</label>
-    <input type="text" id="projectName" placeholder="Enter project name" required>
+<form id="projectForm">
+  <input type="text" id="projectName" placeholder="Project Name" required>
+  <input type="url" id="projectLink" placeholder="GitHub Link" required>
+  <textarea id="projectDesc" placeholder="Project Description" rows="4" required></textarea>
+  <input type="file" id="projectImg" accept="image/*" required>
+  <div class="preview">
+    <img id="previewImg" style="display:none;">
+  </div>
+  <button type="submit">Save Project</button>
+</form>
 
-    <label for="projectLink">GitHub Link:</label>
-    <input type="url" id="projectLink" placeholder="https://github.com/username/repo" required>
+<h2>Existing Projects</h2>
+<div class="project-list" id="projectList"></div>
 
-    <label for="projectDesc">Project Description:</label>
-    <textarea id="projectDesc" placeholder="Enter project description" rows="4" required></textarea>
+<script>
+const CLOUD_NAME = "YOUR_CLOUD_NAME"; // replace
+const UPLOAD_PRESET = "projects_upload"; // replace
+const FOLDER = "projects_site"; // Cloudinary folder for JSON files
 
-    <label for="projectImg">Project Image (from your device):</label>
-    <input type="file" id="projectImg" accept="image/*" required>
+const form = document.getElementById("projectForm");
+const imgInput = document.getElementById("projectImg");
+const preview = document.getElementById("previewImg");
+const messageBox = document.getElementById("messageBox");
+const projectList = document.getElementById("projectList");
+let selectedFile = null;
 
-    <div class="preview-container">
-      <img id="previewImg" src="" alt="Image Preview" style="display:none;">
-    </div>
+function showMessage(msg,type="success"){
+  messageBox.textContent = msg;
+  messageBox.className = `message ${type}`;
+  messageBox.style.display="block";
+  setTimeout(()=>messageBox.style.display="none",5000);
+}
 
-    <button type="submit">Save Project</button>
-  </form>
-
-  <div class="back-btn" onclick="window.location.href='projects.html'">Back to Projects</div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDcRT0XdUcJd4CYnK7gH1mbmc0uM7p9Ly0",
-      authDomain: "thun-9e736.firebaseapp.com",
-      projectId: "thun-9e736",
-      storageBucket: "thun-9e736.appspot.com",
-      messagingSenderId: "531318064423",
-      appId: "1:531318064423:web:c3ec4e1131b55ee96d1502",
-      measurementId: "G-VHZ1CERBJM"
+// Image preview
+imgInput.addEventListener("change",(e)=>{
+  const file = e.target.files[0];
+  selectedFile=file;
+  if(file){
+    const reader=new FileReader();
+    reader.onload=(evt)=>{
+      preview.src=evt.target.result;
+      preview.style.display="block";
     };
+    reader.readAsDataURL(file);
+  }
+});
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
+// Upload new project
+form.addEventListener("submit", async(e)=>{
+  e.preventDefault();
+  const name=document.getElementById("projectName").value.trim();
+  const link=document.getElementById("projectLink").value.trim();
+  const desc=document.getElementById("projectDesc").value.trim();
 
-    const projectList = document.getElementById('projectList');
-    const form = document.getElementById('projectForm');
-    const imgInput = document.getElementById('projectImg');
-    const preview = document.getElementById('previewImg');
-    const loader = document.getElementById('loader');
-    const messageBox = document.getElementById('messageBox');
-    let selectedFile = null;
+  if(!name || !link || !desc || !selectedFile){
+    showMessage("All fields required","error");
+    return;
+  }
 
-    function showMessage(msg, type="success") {
-      messageBox.textContent = msg;
-      messageBox.className = `message ${type}`;
-      messageBox.style.display = "block";
-      setTimeout(() => messageBox.style.display = "none", 5000);
-    }
+  try{
+    showMessage("Uploading image...");
 
-    function showLoader(show) {
-      loader.style.display = show ? "block" : "none";
-    }
+    // Upload image
+    const imgData=new FormData();
+    imgData.append("file",selectedFile);
+    imgData.append("upload_preset",UPLOAD_PRESET);
+    const imgRes=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{method:"POST",body:imgData});
+    const imgJson=await imgRes.json();
+    const imgUrl=imgJson.secure_url;
 
-    imgInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      selectedFile = file;
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          preview.src = evt.target.result;
-          preview.style.display = "block";
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+    // Save project JSON
+    const project={name,link,desc,img:imgUrl,createdAt:new Date().toISOString()};
+    const jsonBlob=new Blob([JSON.stringify(project)],{type:"application/json"});
+    const jsonData=new FormData();
+    jsonData.append("file",jsonBlob,`project_${Date.now()}.json`);
+    jsonData.append("upload_preset",UPLOAD_PRESET);
 
-    async function loadProjects() {
-      showLoader(true);
-      projectList.innerHTML = '';
-      try {
-        const querySnapshot = await getDocs(collection(db, "projects"));
-        querySnapshot.forEach((docSnap) => {
-          const project = docSnap.data();
-          const div = document.createElement('div');
-          div.className = 'project-item';
-          div.innerHTML = `
-            <span>${project.name}</span>
-            <button class="delete-btn" data-id="${docSnap.id}">Delete</button>
-          `;
-          projectList.appendChild(div);
-        });
+    const jsonRes=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`,{method:"POST",body:jsonData});
+    await jsonRes.json();
 
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            const id = btn.getAttribute('data-id');
-            if (confirm("Are you sure you want to delete this project?")) {
-              showLoader(true);
-              try {
-                await deleteDoc(doc(db, "projects", id));
-                showMessage("Project deleted successfully!", "success");
-                loadProjects();
-              } catch (err) {
-                console.error(err);
-                showMessage("Failed to delete project.", "error");
-              } finally {
-                showLoader(false);
-              }
-            }
-          });
-        });
-      } catch (err) {
-        console.error(err);
-        showMessage("Error loading projects.", "error");
-      }
-      showLoader(false);
-    }
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const name = document.getElementById('projectName').value.trim();
-      const link = document.getElementById('projectLink').value.trim();
-      const desc = document.getElementById('projectDesc').value.trim();
-
-      if (!name || !link || !desc || !selectedFile) {
-        showMessage("All fields are required!", "error");
-        return;
-      }
-
-      showLoader(true);
-      try {
-        const storageRef = ref(storage, `projects/${Date.now()}_${selectedFile.name}`);
-        await uploadBytes(storageRef, selectedFile);
-        const downloadURL = await getDownloadURL(storageRef);
-
-        await addDoc(collection(db, "projects"), {
-          name,
-          link,
-          desc,
-          img: downloadURL,
-          createdAt: new Date().toISOString()
-        });
-
-        showMessage("✅ Project saved successfully!", "success");
-        form.reset();
-        preview.style.display = "none";
-        selectedFile = null;
-        loadProjects();
-      } catch (error) {
-        console.error("Error saving project:", error);
-        showMessage("❌ Failed to save project. Check console for details.", "error");
-      } finally {
-        showLoader(false);
-      }
-    });
-
+    showMessage("✅ Project uploaded!");
+    form.reset();
+    preview.style.display="none";
+    selectedFile=null;
     loadProjects();
-  </script>
+  } catch(err){
+    console.error(err);
+    showMessage("❌ Upload failed","error");
+  }
+});
+
+// Load all existing projects
+async function loadProjects(){
+  projectList.innerHTML="";
+  try{
+    const res=await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${FOLDER}.json`);
+    const data=await res.json();
+    const files=data.resources || [];
+
+    for(const file of files){
+      const jsonRes=await fetch(file.secure_url);
+      const proj=await jsonRes.json();
+
+      const div=document.createElement("div");
+      div.className="project-item";
+      div.innerHTML=`
+        <span>${proj.name}</span>
+        <button class="delete-btn">Delete</button>
+      `;
+      projectList.appendChild(div);
+
+      const delBtn=div.querySelector(".delete-btn");
+      delBtn.addEventListener("click", async()=>{
+        if(!confirm(`Delete project "${proj.name}"?`)) return;
+        try{
+          // Delete JSON file
+          await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/delete_by_token`,{
+            method:"POST",
+            body:JSON.stringify({token:file.delete_token}),
+            headers: {"Content-Type":"application/json"}
+          });
+          // Delete image
+          const publicId = proj.img.split("/").pop().split(".")[0];
+          await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/destroy`,{
+            method:"POST",
+            body:JSON.stringify({public_id:publicId}),
+            headers: {"Content-Type":"application/json"}
+          });
+          showMessage(`Deleted ${proj.name}`);
+          loadProjects();
+        }catch(err){
+          console.error(err);
+          showMessage("Delete failed","error");
+        }
+      });
+    }
+  }catch(err){
+    console.error(err);
+    showMessage("Failed to load projects","error");
+  }
+}
+
+// Initial load
+loadProjects();
+</script>
+
 </body>
 </html>

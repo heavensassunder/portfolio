@@ -7,6 +7,20 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^5.1.0"
-  }
+    "cloudinary": "^2.7.0",
+    "express": "^5.1.0",
+    "firebase": "^12.4.0"
+  },
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/heavensassunder/portfolio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/heavensassunder/portfolio/issues"
+  },
+  "homepage": "https://github.com/heavensassunder/portfolio#readme"
 }
