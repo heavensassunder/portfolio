@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Projects | My Portfolio</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="style.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -38,17 +38,12 @@
     section {
       max-width: 900px;
       margin: auto;
-      padding: 80px 20px 40px 20px; /* move heading lower */
+      padding: 80px 20px 40px 20px;
     }
 
     h1 { text-align: center; margin-bottom: 60px; }
 
-    /* Accordion container */
-    .accordion {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
+    .accordion { display: flex; flex-direction: column; gap: 20px; }
 
     .accordion-item {
       background: rgba(255,255,255,0.1);
@@ -56,7 +51,7 @@
       overflow: hidden;
       cursor: pointer;
       transition: all 0.3s ease, box-shadow 0.3s ease;
-      min-height: 70px; /* make boxes longer */
+      min-height: 70px;
     }
 
     .accordion-item:hover {
@@ -117,7 +112,6 @@
       font-weight: bold;
     }
 
-    /* Admin button */
     #adminBtn {
       display: block;
       margin: 40px auto 20px auto;
@@ -155,52 +149,70 @@
 
   <section>
     <h1>My Projects</h1>
-
     <div class="accordion" id="projectsAccordion"></div>
-
     <button id="adminBtn">Admin</button>
   </section>
 
-  <script>
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDcRT0XdUcJd4CYnK7gH1mbmc0uM7p9Ly0",
+      authDomain: "thun-9e736.firebaseapp.com",
+      projectId: "thun-9e736",
+      storageBucket: "thun-9e736.firebasestorage.app",
+      messagingSenderId: "531318064423",
+      appId: "1:531318064423:web:c3ec4e1131b55ee96d1502",
+      measurementId: "G-VHZ1CERBJM"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
     const accordion = document.getElementById('projectsAccordion');
-    const projects = JSON.parse(localStorage.getItem('projects')) || [];
 
-    // Populate accordion
-    projects.forEach((proj) => {
-      const item = document.createElement('div');
-      item.className = 'accordion-item';
-      item.innerHTML = `
-        <div class="accordion-header">
-          <img src="${proj.img}" alt="Project Thumbnail">
-          <span>${proj.name}</span>
-        </div>
-        <div class="accordion-content">
-          <img src="${proj.img}" alt="Project Full Image">
-          <p>${proj.desc}</p>
-          <a href="${proj.link}" target="_blank">GitHub Link</a>
-        </div>
-      `;
-      accordion.appendChild(item);
-    });
-
-    // Accordion toggle
-    const items = document.querySelectorAll('.accordion-item');
-    items.forEach(item => {
-      const header = item.querySelector('.accordion-header');
-      header.addEventListener('click', () => {
-        items.forEach(i => {
-          if(i !== item){
-            i.classList.remove('active');
-            i.querySelector('.accordion-content').style.maxHeight = null;
-          }
-        });
-        item.classList.toggle('active');
-        const content = item.querySelector('.accordion-content');
-        content.style.maxHeight = item.classList.contains('active') ? content.scrollHeight + "px" : null;
+    async function loadProjects() {
+      const querySnapshot = await getDocs(collection(db, "projects"));
+      querySnapshot.forEach((doc) => {
+        const proj = doc.data();
+        const item = document.createElement('div');
+        item.className = 'accordion-item';
+        item.innerHTML = `
+          <div class="accordion-header">
+            <img src="${proj.img}" alt="Project Thumbnail">
+            <span>${proj.name}</span>
+          </div>
+          <div class="accordion-content">
+            <img src="${proj.img}" alt="Project Full Image">
+            <p>${proj.desc}</p>
+            <a href="${proj.link}" target="_blank">GitHub Link</a>
+          </div>
+        `;
+        accordion.appendChild(item);
       });
-    });
 
-    // Admin button
+      // Add accordion behavior
+      const items = document.querySelectorAll('.accordion-item');
+      items.forEach(item => {
+        const header = item.querySelector('.accordion-header');
+        header.addEventListener('click', () => {
+          items.forEach(i => {
+            if(i !== item){
+              i.classList.remove('active');
+              i.querySelector('.accordion-content').style.maxHeight = null;
+            }
+          });
+          item.classList.toggle('active');
+          const content = item.querySelector('.accordion-content');
+          content.style.maxHeight = item.classList.contains('active') ? content.scrollHeight + "px" : null;
+        });
+      });
+    }
+
+    loadProjects();
+
     document.getElementById('adminBtn').addEventListener('click', () => {
       const password = prompt("Enter Admin Password:");
       if(password === "rmnw3242"){

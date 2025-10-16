@@ -4,13 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact | My Portfolio</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="style.css">
   <style>
     /* Social links container */
     .social-links {
       display: flex;
       gap: 30px;
       margin-top: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     /* Each social link */
@@ -29,22 +31,18 @@
       width: 50px;
       height: 50px;
       margin-bottom: 5px;
-      transition: transform 0.3s;
+      transition: transform 0.3s, box-shadow 0.3s;
     }
 
     /* Hover effect */
     .social-links a:hover img {
       transform: scale(1.2) rotate(10deg);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
 
     .social-links a:hover {
-      color: #00ffcc; /* Change text color on hover */
+      color: #00ffcc;
       transform: translateY(-5px);
-    }
-
-    /* Optional: Add a subtle shadow on hover */
-    .social-links a:hover img {
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     }
   </style>
 </head>
