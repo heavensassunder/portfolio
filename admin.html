@@ -1,41 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin | Manage Projects</title>
-<style>
-  body { font-family: Arial; color:#fff; background: linear-gradient(-45deg,#1e3c72,#2a5298,#0f9b0f,#ff4500); background-size:400% 400%; animation: gradientBG 15s ease infinite; min-height:100vh; padding:20px;}
-  @keyframes gradientBG {0% { background-position:0% 50%; } 50% { background-position:100% 50%; } 100% { background-position:0% 50%; }}
-  h1 { text-align:center; }
-  form { max-width:600px; margin:auto; display:flex; flex-direction:column; gap:15px; }
-  input,textarea { padding:10px; border-radius:5px; border:none; font-size:16px; }
-  button { padding:10px; font-weight:bold; border:none; border-radius:5px; background:#0f9b0f; color:#fff; cursor:pointer; transition:transform 0.2s;}
-  button:hover { transform:scale(1.05);}
-  .preview { text-align:center; margin-top:10px; }
-  .preview img { max-width:100%; max-height:200px; border:2px solid rgba(255,255,255,0.3); border-radius:5px; }
-  .message { text-align:center; margin:10px auto; padding:10px; border-radius:5px; max-width:500px; display:none; font-weight:bold; }
-  .success { background: rgba(0,255,0,0.3);}
-  .error { background: rgba(255,0,0,0.3);}
-  .project-list { max-width:700px; margin:30px auto; display:flex; flex-direction:column; gap:10px; }
-  .project-item { display:flex; justify-content:space-between; align-items:center; padding:10px 15px; background: rgba(255,255,255,0.2); border-radius:5px; }
-  .delete-btn { background:#ff4c4c; border:none; color:#fff; font-weight:bold; padding:6px 12px; border-radius:5px; cursor:pointer; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Manage Projects</title>
+  <style>
+    body { font-family: Arial; color:#fff; background: linear-gradient(-45deg,#1e3c72,#2a5298,#0f9b0f,#ff4500); background-size:400% 400%; animation: gradientBG 15s ease infinite; min-height:100vh; }
+    @keyframes gradientBG {0% { background-position:0% 50%; } 50% { background-position:100% 50%; } 100% { background-position:0% 50%; }}
+    h1 { text-align:center; }
+    form { max-width:600px; margin:auto; display:flex; flex-direction:column; gap:15px; }
+    input,textarea { padding:10px; border-radius:5px; border:none; font-size:16px; }
+    button { padding:10px; font-weight:bold; border:none; border-radius:5px; background:#0f9b0f; color:#fff; cursor:pointer; transition:transform 0.2s;}
+    button:hover { transform:scale(1.05);}
+    .preview { text-align:center; margin-top:10px; }
+    .preview img { max-width:100%; max-height:200px; border:2px solid rgba(255,255,255,0.3); border-radius:5px; }
+    .message { text-align:center; margin:10px auto; padding:10px; border-radius:5px; max-width:500px; display:none; font-weight:bold; }
+    .success { background: rgba(0,255,0,0.3);}
+    .error { background: rgba(255,0,0,0.3);}
+    .project-list { max-width:700px; margin:30px auto; display:flex; flex-direction:column; gap:10px; }
+    .project-item { display:flex; justify-content:space-between; align-items:center; padding:10px 15px; background: rgba(255,255,255,0.2); border-radius:5px; }
+    .delete-btn { background:#ff4c4c; border:none; color:#fff; font-weight:bold; padding:6px 12px; border-radius:5px; cursor:pointer; }
+  </style>
 </head>
 <body>
 
 <h1>Admin Panel - Manage Projects</h1>
-
 <div class="message" id="messageBox"></div>
-
 <form id="projectForm">
   <input type="text" id="projectName" placeholder="Project Name" required>
   <input type="url" id="projectLink" placeholder="GitHub Link" required>
   <textarea id="projectDesc" placeholder="Project Description" rows="4" required></textarea>
   <input type="file" id="projectImg" accept="image/*" required>
-  <div class="preview">
-    <img id="previewImg" style="display:none;">
-  </div>
+  <div class="preview"><img id="previewImg" style="display:none;"></div>
   <button type="submit">Save Project</button>
 </form>
 
@@ -43,9 +39,9 @@
 <div class="project-list" id="projectList"></div>
 
 <script>
-const CLOUD_NAME = "YOUR_CLOUD_NAME"; // replace
-const UPLOAD_PRESET = "projects_upload"; // replace
-const FOLDER = "projects_site"; // Cloudinary folder for JSON files
+const CLOUD_NAME = "YOUR_CLOUD_NAME"; // replace with your Cloudinary cloud name
+const UPLOAD_PRESET = "projects_upload"; // your Cloudinary unsigned preset
+const API_URL = "http://localhost:5000/api/projects";
 
 const form = document.getElementById("projectForm");
 const imgInput = document.getElementById("projectImg");
@@ -54,119 +50,99 @@ const messageBox = document.getElementById("messageBox");
 const projectList = document.getElementById("projectList");
 let selectedFile = null;
 
-function showMessage(msg,type="success"){
+function showMessage(msg, type="success") {
   messageBox.textContent = msg;
   messageBox.className = `message ${type}`;
-  messageBox.style.display="block";
-  setTimeout(()=>messageBox.style.display="none",5000);
+  messageBox.style.display = "block";
+  setTimeout(()=>messageBox.style.display="none", 4000);
 }
 
 // Image preview
-imgInput.addEventListener("change",(e)=>{
+imgInput.addEventListener("change", e => {
   const file = e.target.files[0];
-  selectedFile=file;
+  selectedFile = file;
   if(file){
-    const reader=new FileReader();
-    reader.onload=(evt)=>{
-      preview.src=evt.target.result;
-      preview.style.display="block";
+    const reader = new FileReader();
+    reader.onload = evt => {
+      preview.src = evt.target.result;
+      preview.style.display = "block";
     };
     reader.readAsDataURL(file);
   }
 });
 
 // Upload new project
-form.addEventListener("submit", async(e)=>{
+form.addEventListener("submit", async e => {
   e.preventDefault();
-  const name=document.getElementById("projectName").value.trim();
-  const link=document.getElementById("projectLink").value.trim();
-  const desc=document.getElementById("projectDesc").value.trim();
+  const name = document.getElementById("projectName").value.trim();
+  const link = document.getElementById("projectLink").value.trim();
+  const desc = document.getElementById("projectDesc").value.trim();
 
   if(!name || !link || !desc || !selectedFile){
-    showMessage("All fields required","error");
+    showMessage("All fields required", "error");
     return;
   }
 
-  try{
+  try {
     showMessage("Uploading image...");
+    // Upload image to Cloudinary
+    const imgData = new FormData();
+    imgData.append("file", selectedFile);
+    imgData.append("upload_preset", UPLOAD_PRESET);
+    const imgRes = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, { method: "POST", body: imgData });
+    const imgJson = await imgRes.json();
+    const imgUrl = imgJson.secure_url;
 
-    // Upload image
-    const imgData=new FormData();
-    imgData.append("file",selectedFile);
-    imgData.append("upload_preset",UPLOAD_PRESET);
-    const imgRes=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{method:"POST",body:imgData});
-    const imgJson=await imgRes.json();
-    const imgUrl=imgJson.secure_url;
+    // Now send the project data to backend
+    await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, link, desc, img: imgUrl })
+    });
 
-    // Save project JSON
-    const project={name,link,desc,img:imgUrl,createdAt:new Date().toISOString()};
-    const jsonBlob=new Blob([JSON.stringify(project)],{type:"application/json"});
-    const jsonData=new FormData();
-    jsonData.append("file",jsonBlob,`project_${Date.now()}.json`);
-    jsonData.append("upload_preset",UPLOAD_PRESET);
-
-    const jsonRes=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`,{method:"POST",body:jsonData});
-    await jsonRes.json();
-
-    showMessage("✅ Project uploaded!");
+    showMessage("✔️ Project uploaded!");
     form.reset();
     preview.style.display="none";
     selectedFile=null;
     loadProjects();
-  } catch(err){
+  } catch (err) {
     console.error(err);
-    showMessage("❌ Upload failed","error");
+    showMessage("❌ Upload failed", "error");
   }
 });
 
-// Load all existing projects
-async function loadProjects(){
-  projectList.innerHTML="";
-  try{
-    const res=await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${FOLDER}.json`);
-    const data=await res.json();
-    const files=data.resources || [];
-
-    for(const file of files){
-      const jsonRes=await fetch(file.secure_url);
-      const proj=await jsonRes.json();
-
-      const div=document.createElement("div");
-      div.className="project-item";
-      div.innerHTML=`
+// Load projects from backend
+async function loadProjects() {
+  projectList.innerHTML = "";
+  try {
+    const res = await fetch(API_URL);
+    const projects = await res.json();
+    for(const proj of projects){
+      const div = document.createElement("div");
+      div.className = "project-item";
+      div.innerHTML = `
         <span>${proj.name}</span>
         <button class="delete-btn">Delete</button>
       `;
       projectList.appendChild(div);
 
-      const delBtn=div.querySelector(".delete-btn");
-      delBtn.addEventListener("click", async()=>{
+      // Delete button
+      const delBtn = div.querySelector(".delete-btn");
+      delBtn.addEventListener("click", async () => {
         if(!confirm(`Delete project "${proj.name}"?`)) return;
-        try{
-          // Delete JSON file
-          await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/delete_by_token`,{
-            method:"POST",
-            body:JSON.stringify({token:file.delete_token}),
-            headers: {"Content-Type":"application/json"}
-          });
-          // Delete image
-          const publicId = proj.img.split("/").pop().split(".")[0];
-          await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/destroy`,{
-            method:"POST",
-            body:JSON.stringify({public_id:publicId}),
-            headers: {"Content-Type":"application/json"}
-          });
+        try {
+          await fetch(`${API_URL}/${proj._id}`, { method: "DELETE" });
           showMessage(`Deleted ${proj.name}`);
           loadProjects();
-        }catch(err){
+        } catch(err) {
           console.error(err);
-          showMessage("Delete failed","error");
+          showMessage("Delete failed", "error");
         }
       });
     }
-  }catch(err){
+  } catch(err) {
     console.error(err);
-    showMessage("Failed to load projects","error");
+    showMessage("Failed to load projects", "error");
   }
 }
 
